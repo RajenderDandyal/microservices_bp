@@ -1,1 +1,12 @@
-spring.application.name=invoice-service
+spring:
+  application:
+    name: invoice-service
+
+  flyway:
+    default-schema: invoice_db
+  locations:
+    - classpath:db/migration
+
+server:
+  port: 8002
+
