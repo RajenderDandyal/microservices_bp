@@ -4,8 +4,8 @@ spring:
 
   flyway:
     default-schema: invoice_db
-  locations:
-    - classpath:db/migration
+    enabled: true
+    baseline-on-migration: true
 
 server:
   port: 8002
