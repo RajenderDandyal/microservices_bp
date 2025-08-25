@@ -1,9 +1,9 @@
 spring:
   application:
-    name: invoice-service
+    name: user-service
 
   flyway:
-    default-schema: invoice_db
+    default-schema: user_db
 #    enabled: false
 #    baseline-on-migration: true
   error:
@@ -20,5 +20,5 @@ spring:
       add-mappings: false
 
 server:
-  port: 8002
+  port: 8003
 
