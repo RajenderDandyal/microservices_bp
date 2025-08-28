@@ -71,7 +71,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.yourcompany.utils</groupId>
+            <groupId>com.yourcompany</groupId>
             <artifactId>utils</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
