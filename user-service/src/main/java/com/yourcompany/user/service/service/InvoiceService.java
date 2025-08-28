@@ -1,11 +1,13 @@
 package com.yourcompany.user.service.service;
 
 
-import com.user.service.client.InvoiceServiceFeignClient;
-import com.user.service.dto.InvoiceDTO;
-import com.user.service.exception.InvoiceException;
-import com.user.service.exception.UserException;
+import com.yourcompany.user.service.client.InvoiceServiceFeignClient;
+import com.yourcompany.user.service.dto.InvoiceDTO;
+import com.yourcompany.user.service.exception.ApiException;
+import com.yourcompany.user.service.exception.InvoiceException;
+import com.yourcompany.user.service.exception.UserException;
 import feign.FeignException.ServiceUnavailable;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -28,8 +30,8 @@ public class InvoiceService {
     private final RetryTemplate retryTemplate;
 
 
-    //@Retryable(retryFor = {Exception.class}, maxAttempts = 4, backoff = @Backoff(delay = 3000))
-    public List<InvoiceDTO> callInvoiceServiceAndGetInvoiceDTOList(String userId) {
+    @Retryable(retryFor = {Exception.class}, maxAttempts = 4, backoff = @Backoff(delay = 3000))
+    public List<InvoiceDTO> callInvoiceServiceAndGetInvoiceDTOList(String userId, HttpServletRequest request) {
 
         AtomicReference<List<InvoiceDTO>> invoiceResponse = new AtomicReference<>(new ArrayList<>());
 
@@ -40,14 +42,12 @@ public class InvoiceService {
                 return invoiceResponse;
             });
 
-            //invoiceResponse = invoiceServiceFeignClient.getInvoices(userId);
-
-        } catch (InvoiceException invoiceException) {
+        } catch (ApiException invoiceException) {
             throw invoiceException;
         } catch (ServiceUnavailable ex) {
-            throw new UserException("Downstream service unavailable", List.of("invoice-service is down"), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ApiException(HttpStatus.NOT_FOUND.value(), "Downstream service unavailable", request.getPathInfo(),  List.of("invoice-service is down"));
         } catch (Exception ex) {
-            throw new UserException("Downstream service unavailable", List.of("invoice-service is down"), HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(), request.getPathInfo(),  List.of("Some issue with server"));
         }
 
         return invoiceResponse.get();

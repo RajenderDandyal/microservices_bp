@@ -1,11 +1,14 @@
 package com.yourcompany.user.service.service;
 
 
-import com.user.service.dto.InvoiceDTO;
-import com.user.service.dto.UserInfo;
-import com.user.service.entities.UserE;
-import com.user.service.exception.UserException;
-import com.user.service.repos.UserRepository;
+import brave.http.HttpServerRequest;
+import com.yourcompany.user.service.dto.InvoiceDTO;
+import com.yourcompany.user.service.dto.UserInfo;
+import com.yourcompany.user.service.entities.UserE;
+import com.yourcompany.user.service.exception.ApiException;
+import com.yourcompany.user.service.exception.UserException;
+import com.yourcompany.user.service.repos.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,11 +26,11 @@ public class UserService {
     private final InvoiceService invoiceService;
     private final UserRepository userRepository;
 
-    public List<UserInfo> getUsers(List<String> ids) {
+    public List<UserInfo> getUsers(List<String> ids, HttpServletRequest request) {
 
 
         if(CollectionUtils.isEmpty(ids)) {
-            throw new UserException("Bad request", List.of("userIds are missing in request."), HttpStatus.BAD_REQUEST);
+            throw new ApiException(HttpStatus.BAD_REQUEST.value(), "Bad request", request.getPathInfo(),List.of("userIds are missing in request."));
         }
 
         log.info("Calling database with ids : {} ", ids);
@@ -36,14 +39,14 @@ public class UserService {
         log.info("Sending response back.");
 
         return userEList.stream()
-                .map(this::getUserInfo)
+                .map((user)->this.getUserInfo(user, request))
                 .toList();
     }
 
-    private UserInfo getUserInfo(UserE user) {
+    private UserInfo getUserInfo(UserE user, HttpServletRequest request) {
 
         log.info("calling invoice-service for user-id : {} ", user.getId());
-        List<InvoiceDTO> invoiceDTOS = invoiceService.callInvoiceServiceAndGetInvoiceDTOList(user.getId());
+        List<InvoiceDTO> invoiceDTOS = invoiceService.callInvoiceServiceAndGetInvoiceDTOList(user.getId(), request);
 
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(user.getId());

@@ -1,4 +1,4 @@
-package com.yourcompany.utils.exception;
+package com.yourcompany.user.service.exception;
 
 
 import lombok.Data;
@@ -19,7 +19,7 @@ public class ApiException extends RuntimeException {
         this.status = status;
         this.message = message;
         this.path = path;
-//        this.errors = errors;
+
         if (errors instanceof List) {
             this.errors = errors;
         } else {
