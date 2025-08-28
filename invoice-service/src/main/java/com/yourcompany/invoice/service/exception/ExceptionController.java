@@ -13,8 +13,8 @@ public class ExceptionController {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiError> handleInvoiceException(ApiException invoiceException) {
 
-        ApiError invoiceError = new ApiError(invoiceException.getStatus(), invoiceException.getMessage(), invoiceException.getPath(), invoiceException.getErrors());
-        return ResponseEntity.status(invoiceException.getStatus()).body(invoiceError);
+        ApiError apiError = new ApiError(invoiceException.getStatus(), invoiceException.getMessage(), invoiceException.getPath(), invoiceException.getErrors());
+        return ResponseEntity.status(invoiceException.getStatus()).body(apiError);
     }
 
 }

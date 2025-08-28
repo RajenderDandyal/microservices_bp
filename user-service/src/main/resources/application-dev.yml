@@ -16,3 +16,7 @@ spring:
       - classpath:db/migration/dev
 server:
   port: 8003
+
+invoice:
+  service:
+    url: http://localhost:8002

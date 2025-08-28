@@ -15,3 +15,7 @@ spring:
       - classpath:db/migration/qa
 server:
   port: 8003
+
+invoice:
+  service:
+    url: http://localhost:8002

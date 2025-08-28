@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -34,11 +35,11 @@ public class UserController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserError.class)))
     })
     @GetMapping("/users")
-    public List<UserInfo> getUsers(@RequestParam("ids") List<String> ids) {
+    public List<UserInfo> getUsers(@RequestParam("ids") List<String> ids, HttpServletRequest request) {
 
         log.info("Received request for ids : {} ", ids);
 
-        return userService.getUsers(ids);
+        return userService.getUsers(ids, request);
     }
 
 }
