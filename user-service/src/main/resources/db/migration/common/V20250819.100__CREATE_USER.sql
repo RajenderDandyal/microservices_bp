@@ -5,6 +5,5 @@ CREATE TABLE user_db.USER_RECORD (
     GENDER CHAR(1) CHECK (GENDER IN ('M','F')),
     CREATED_TIME TIMESTAMP NOT NULL,
     UPDATED_TIME TIMESTAMP NOT NULL,
-    constraint USER_ID_PK primary key (USER_ID),
-    constraint USER_ID_FK foreign key (USER_ID) references USER_DB.USER_RECORD(USER_ID)
+    constraint USER_ID_PK primary key (USER_ID)
 );

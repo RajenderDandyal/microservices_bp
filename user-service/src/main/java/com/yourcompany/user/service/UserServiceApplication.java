@@ -1,4 +1,4 @@
-package com.yourcompany.user.service.service;
+package com.yourcompany.user.service;
 
 import co.elastic.apm.attach.ElasticApmAttacher;
 import org.springframework.boot.SpringApplication;
@@ -8,7 +8,7 @@ import org.springframework.retry.annotation.EnableRetry;
 
 
 @EnableRetry
-@EnableFeignClients("com.user.service.client")
+@EnableFeignClients(basePackages = "com.yourcompany.user.service.client")
 @SpringBootApplication
 public class UserServiceApplication {
 

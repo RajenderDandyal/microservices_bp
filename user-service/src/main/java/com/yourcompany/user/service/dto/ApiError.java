@@ -1,29 +1,25 @@
-package com.yourcompany.invoice.service.exception;
-
+package com.yourcompany.user.service.dto;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-public class ApiException extends RuntimeException {
-
+public class ApiError {
     private int status;
     private String message;
     private String path;
     private LocalDateTime timestamp;
     private Object errors; // for validation field errors
 
-    public ApiException(int status, String message, String path, Object errors) {
+    public ApiError(int status, String message, String path, Object errors) {
         this.status = status;
         this.message = message;
         this.path = path;
-        if (errors instanceof List) {
-            this.errors = errors;
-        } else {
-            this.errors = List.of(errors.toString());
-        }
+        this.errors = errors;
         this.timestamp = LocalDateTime.now();
     }
+
+    // getters & setters
 }
+
