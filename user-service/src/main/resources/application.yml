@@ -20,9 +20,16 @@ spring:
       add-mappings: false
 
 server:
-  port: 8003
+  port: 8001
 
 invoice:
   service:
     url: http://localhost:8002
+
+feign:
+  client:
+    config:
+      invoice-service-feign-client:
+        connectTimeout: 5000
+        readTimeout: 8000
 

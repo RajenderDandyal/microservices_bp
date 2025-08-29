@@ -35,10 +35,10 @@ public class InvoiceService {
         log.info("Calling Database with userId: {} ", userId);
         List<Invoice> invoices = invoiceRepository.findAllByUserId(userId);
         if (invoices.isEmpty()) {
-            log.info("userId not found in db");
-             throw new ApiException(HttpStatus.BAD_REQUEST.value(), "Bad request",
-             request.getPathInfo(),
-             List.of("userId not found in db."));
+            log.info("userId not found in db: {} ", userId);
+//             throw new ApiException(HttpStatus.BAD_REQUEST.value(), "Bad request",
+//             request.getPathInfo(),
+//             List.of("userId not found in db."));
         }
 
         log.info("Returning invoice-service response");

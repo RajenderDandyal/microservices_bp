@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@FeignClient(url = "${invoice.service.url}", value = "invoice-service-feign-client", path = "/api/v1")
+@FeignClient(url = "${invoice.service.url}", value = "invoice-service-feign-client", path = "/v1")
 public interface InvoiceServiceFeignClient {
 
     @GetMapping("/invoices")
