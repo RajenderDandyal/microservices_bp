@@ -14,8 +14,6 @@ spring:
     locations:
       - classpath:db/migration/common
       - classpath:db/migration/dev
-server:
-  port: 8003
 
 invoice:
   service:
