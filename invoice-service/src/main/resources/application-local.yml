@@ -13,5 +13,3 @@ spring:
     locations:
       - classpath:db/migration/common
       - classpath:db/migration/local
-server:
-  port: 8002

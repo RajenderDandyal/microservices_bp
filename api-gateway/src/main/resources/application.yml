@@ -1,0 +1,75 @@
+#spring:
+#  application:
+#    name: api-gateway
+#
+#  cloud:
+#    gateway:
+#      routes:
+#          id: user-service-route
+#          uri: http://localhost:8001
+#          predicates:
+#            - Path=/api/v1/user-service/users
+#          filters:
+#            - RewritePath=/api/v1/user-service/users, /api/v1/users
+#  #          - name: CircuitBreaker
+#  #            args:
+#  #              name: userServiceCircuitBreaker
+#  #              fallbackUri: forward:/fallback
+#
+#          id: invoice-service-route
+#          uri: http://localhost:8002
+#          predicates:
+#            - Path=/api/v1/invoice-service/invoices
+#          filters:
+#            - RewritePath=/api/v1/invoice-service/invoices, /api/v1/invoices
+#  #          - name: CircuitBreaker
+#  #            args:
+#  #              name: invoiceServiceCircuitBreaker
+#  #              fallbackUri: forward:/fallback
+#
+#server:
+#  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      routes:
+        # -------------------
+        # User Service
+        # -------------------
+        - id: user-service
+          uri: http://localhost:8001    # user-service host:port
+          predicates:
+            - Path=/api/v1/user-service/**
+          filters:
+            - RewritePath=/api/v1/user-service/(?<remaining>.*), /v1/${remaining}
+
+        # -------------------
+        # Invoice Service
+        # -------------------
+        - id: invoice-service
+          uri: http://localhost:8002    # invoice-service host:port
+          predicates:
+            - Path=/api/v1/invoice-service/**
+          filters:
+            - RewritePath=/api/v1/invoice-service/(?<remaining>.*), /v1/${remaining}
+
+      # Optional: default fallback route
+      default-filters:
+        - name: Retry
+          args:
+            retries: 3
+            statuses: BAD_GATEWAY, GATEWAY_TIMEOUT
+
+
+server:
+  port: 8000
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.http: DEBUG
