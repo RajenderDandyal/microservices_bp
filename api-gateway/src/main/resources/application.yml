@@ -1,35 +1,3 @@
-#spring:
-#  application:
-#    name: api-gateway
-#
-#  cloud:
-#    gateway:
-#      routes:
-#          id: user-service-route
-#          uri: http://localhost:8001
-#          predicates:
-#            - Path=/api/v1/user-service/users
-#          filters:
-#            - RewritePath=/api/v1/user-service/users, /api/v1/users
-#  #          - name: CircuitBreaker
-#  #            args:
-#  #              name: userServiceCircuitBreaker
-#  #              fallbackUri: forward:/fallback
-#
-#          id: invoice-service-route
-#          uri: http://localhost:8002
-#          predicates:
-#            - Path=/api/v1/invoice-service/invoices
-#          filters:
-#            - RewritePath=/api/v1/invoice-service/invoices, /api/v1/invoices
-#  #          - name: CircuitBreaker
-#  #            args:
-#  #              name: invoiceServiceCircuitBreaker
-#  #              fallbackUri: forward:/fallback
-#
-#server:
-#  port: 8080
-
 spring:
   application:
     name: api-gateway
