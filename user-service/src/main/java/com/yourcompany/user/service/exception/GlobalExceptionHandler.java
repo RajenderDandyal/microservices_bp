@@ -1,4 +1,5 @@
 package com.yourcompany.user.service.exception;
+
 import com.yourcompany.user.service.dto.ApiError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -18,23 +19,21 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
-    // 🔹 Handle 404 - Route not found
+    // 🔹 Handle 404 - Route not found error
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(NoHandlerFoundException ex, HttpServletRequest request) {
         ApiError error = new ApiError(
                 HttpStatus.NOT_FOUND.value(),
                 "Resource not found",
                 request.getRequestURI(),
-                null
-        );
+                null);
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 
     // 🔹 Handle @Valid validation errors (request body)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiError> handleValidationExceptions(MethodArgumentNotValidException ex,
-                                                               HttpServletRequest request) {
+            HttpServletRequest request) {
         Map<String, String> validationErrors = new HashMap<>();
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
@@ -44,26 +43,22 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation failed",
                 request.getRequestURI(),
-                validationErrors
-        );
+                validationErrors);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // 🔹 Handle constraint violations (e.g. @RequestParam, @PathVariable)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ApiError> handleConstraintViolation(ConstraintViolationException ex,
-                                                              HttpServletRequest request) {
+            HttpServletRequest request) {
         Map<String, String> violations = new HashMap<>();
-        ex.getConstraintViolations().forEach(cv ->
-                violations.put(cv.getPropertyPath().toString(), cv.getMessage())
-        );
+        ex.getConstraintViolations().forEach(cv -> violations.put(cv.getPropertyPath().toString(), cv.getMessage()));
 
         ApiError error = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
                 "Constraint violation",
                 request.getRequestURI(),
-                violations
-        );
+                violations);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
@@ -74,55 +69,55 @@ public class GlobalExceptionHandler {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 ex.getMessage() != null ? ex.getMessage() : "Internal Server Error",
                 request.getRequestURI(),
-                null
-        );
+                null);
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException ex, HttpServletRequest request) {
         ApiError error = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage() != null ? ex.getMessage() : "Invalid request",
                 request.getRequestURI(),
-                null
-        );
+                null);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
     // Handle HTTP method not supported
     @ExceptionHandler(org.springframework.web.HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiError> handleMethodNotSupported(org.springframework.web.HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleMethodNotSupported(
+            org.springframework.web.HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
         ApiError error = new ApiError(
                 HttpStatus.METHOD_NOT_ALLOWED.value(),
                 "HTTP method not supported",
                 request.getRequestURI(),
-                null
-        );
+                null);
         return new ResponseEntity<>(error, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     // Handle malformed JSON or unreadable request body
     @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiError> handleInvalidJson(org.springframework.http.converter.HttpMessageNotReadableException ex, HttpServletRequest request) {
+    public ResponseEntity<ApiError> handleInvalidJson(
+            org.springframework.http.converter.HttpMessageNotReadableException ex, HttpServletRequest request) {
         ApiError error = new ApiError(
                 HttpStatus.BAD_REQUEST.value(),
                 "Malformed JSON request",
                 request.getRequestURI(),
-                null
-        );
+                null);
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-//    // Handle access denied (Spring Security)
-//    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-//    public ResponseEntity<ApiError> handleAccessDenied(org.springframework.security.access.AccessDeniedException ex, HttpServletRequest request) {
-//        ApiError error = new ApiError(
-//                HttpStatus.FORBIDDEN.value(),
-//                "Access denied",
-//                request.getRequestURI(),
-//                null
-//        );
-//        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-//    }
+    // // Handle access denied (Spring Security)
+    // @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
+    // public ResponseEntity<ApiError>
+    // handleAccessDenied(org.springframework.security.access.AccessDeniedException
+    // ex, HttpServletRequest request) {
+    // ApiError error = new ApiError(
+    // HttpStatus.FORBIDDEN.value(),
+    // "Access denied",
+    // request.getRequestURI(),
+    // null
+    // );
+    // return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    // }
 }
-
