@@ -12,7 +12,7 @@ pipeline {
     }
     stage('Build') {
       steps {
-        sh 'mvn clean package'
+        // sh 'mvn clean package'
       }
     }
     stage('SonarQube Analysis') {
@@ -28,7 +28,7 @@ pipeline {
         checkout scm
         sh 'docker build -t $DOCKERHUB_USER/microservices:${GIT_COMMIT} .'
         // sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin'
-        sh 'echo $DOCKERHUB_PASSWORD'
+        // sh 'echo $DOCKERHUB_PASSWORD'
         sh 'docker push $DOCKERHUB_USER/microservices:${GIT_COMMIT}'
       }
     }
