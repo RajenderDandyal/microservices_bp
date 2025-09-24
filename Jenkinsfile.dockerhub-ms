@@ -1,5 +1,5 @@
 pipeline {
-  agent { docker { image 'jenkins/agent:latest' } }
+  agent { dockerContainer { image 'jenkins/agent:latest' } }
   environment {
     DOCKERHUB_USER = credentials('dockerhub-user')
     DOCKERHUB_PASSWORD = credentials('dockerhub-password')
