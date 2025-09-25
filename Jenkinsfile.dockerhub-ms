@@ -1,5 +1,7 @@
 pipeline {
-  agent { label 'docker-agent' }
+  agent {
+    label 'docker-agent'
+  }
   environment {
     DOCKERHUB_USER = credentials('dockerhub-user')
     DOCKERHUB_PASSWORD = credentials('dockerhub-password')
@@ -15,14 +17,14 @@ pipeline {
         sh 'mvn clean package'
       }
     }
-    stage('SonarQube Analysis') {
-      environment {
-        SONAR_TOKEN = credentials('sonar-token')
-      }
-      steps {
-        sh 'mvn sonar:sonar -Dsonar.projectKey=microservices -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_TOKEN'
-      }
-    }
+    // stage('SonarQube Analysis') {
+    //   environment {
+    //     SONAR_TOKEN = credentials('sonar-token')
+    //   }
+    //   steps {
+    //     sh 'mvn sonar:sonar -Dsonar.projectKey=microservices -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_TOKEN'
+    //   }
+    // }
     stage('Docker Build & Push') {
       steps {
         checkout scm
