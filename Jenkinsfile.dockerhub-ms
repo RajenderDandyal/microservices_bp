@@ -112,19 +112,19 @@ pipeline {
         stash name: 'source', includes: '**'
       }
         }
-        stage('Resolve Dependencies') {
-      // For this stage, we need Maven. So we use the official Maven image.
-      // Your controller now has the 'docker' command to start this agent.
-      agent {
-        docker { image 'maven:3.8-jdk-11' }
-      }
-      steps {
-        // Unstash (retrieve) the code from the 'Checkout' stage.
-        unstash 'source'
-        echo 'Resolving Maven dependencies inside a Maven container...'
-        sh 'mvn dependency:resolve -U'
-      }
-        }
+      //   stage('Resolve Dependencies') {
+      // // For this stage, we need Maven. So we use the official Maven image.
+      // // Your controller now has the 'docker' command to start this agent.
+      // agent {
+      //   docker { image 'maven:3.8-jdk-11' }
+      // }
+      // steps {
+      //   // Unstash (retrieve) the code from the 'Checkout' stage.
+      //   unstash 'source'
+      //   echo 'Resolving Maven dependencies inside a Maven container...'
+      //   sh 'mvn dependency:resolve -U'
+      // }
+      //   }
         stage('Run Maven Tests') {
       // For this stage, we need Maven. So we use the official Maven image.
       // Your controller now has the 'docker' command to start this agent.
