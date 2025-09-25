@@ -29,6 +29,20 @@ pipeline {
     //     sh 'mvn sonar:sonar -Dsonar.projectKey=microservices -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_TOKEN'
     //   }
     // }
+    stage('Debug Docker Login') {
+      steps {
+        // This block securely loads credentials by their ID into environment variables
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+          echo 'Attempting to log in to Docker Hub...'
+          echo "Using Docker Hub Username: ${DOCKER_USERNAME}"
+
+          // This command attempts the login. It pipes the password securely.
+          // The output of this command will tell us the exact error.
+          // We add '|| true' so the pipeline doesn't stop if the login fails here.
+          sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin || true"
+        }
+      }
+    }
     stage('Build and Push Docker Image') {
       steps {
         script {
