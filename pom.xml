@@ -19,7 +19,7 @@
     <description>Parent project for Spring Boot microservices</description>
 
     <modules>
-        <module>utils</module>
+<!--        <module>utils</module>-->
         <module>invoice-service</module>
         <module>user-service</module>
         <module>api-gateway</module>
