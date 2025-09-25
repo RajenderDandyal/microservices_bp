@@ -11,6 +11,17 @@ pipeline {
   //   // DOCKERHUB_PASSWORD = credentials('dockerhub-password')
   // }
   stages {
+    stage('Resolve Dependencies') {
+      steps {
+        sh 'mvn dependency:resolve -U'
+      }
+    }
+    stage('Build') {
+      steps {
+        sh 'mvn clean package -U -DskipTests'
+      }
+    }
+  stages {
     stage('Unit Test') {
       steps {
         sh 'mvn test -U'
