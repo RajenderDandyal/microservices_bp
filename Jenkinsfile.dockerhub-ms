@@ -30,6 +30,9 @@ pipeline {
     //   }
     // }
     stage('Debug Docker Login') {
+      agent {
+        docker { image 'jenkins/docker' }
+      }
       steps {
         // This block securely loads credentials by their ID into environment variables
         withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
