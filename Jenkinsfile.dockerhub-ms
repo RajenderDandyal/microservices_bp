@@ -2,10 +2,10 @@ pipeline {
   agent {
     label 'docker-agent'
   }
-  environment {
-    // DOCKERHUB_USER = credentials('dockerhub-user')
-    // DOCKERHUB_PASSWORD = credentials('dockerhub-password')
-  }
+  // environment {
+  //   // DOCKERHUB_USER = credentials('dockerhub-user')
+  //   // DOCKERHUB_PASSWORD = credentials('dockerhub-password')
+  // }
   stages {
     stage('Unit Test') {
       steps {
