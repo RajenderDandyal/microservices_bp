@@ -1,7 +1,7 @@
 pipeline {
   agent {
-    dockerfile {
-        image 'maven:4.0.0-rc-4-amazoncorretto-21'  // Use an official Maven image
+    docker {
+        image 'csanchez/maven:latest'  // Use an official Maven image
         reuseNode true            // Recommended for performance
         args '-v /var/run/docker.sock:/var/run/docker.sock' // Keep for docker commands
     }
