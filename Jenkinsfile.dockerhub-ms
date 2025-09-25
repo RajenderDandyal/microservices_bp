@@ -25,14 +25,28 @@ pipeline {
     //     sh 'mvn sonar:sonar -Dsonar.projectKey=microservices -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=$SONAR_TOKEN'
     //   }
     // }
-    stage('Docker Build & Push') {
-      steps {
-        checkout scm
-        sh 'docker build -t $DOCKERHUB_USER/microservices:${GIT_COMMIT} .'
-        // sh 'echo $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USER --password-stdin'
-        sh 'echo $DOCKERHUB_PASSWORD'
-        sh 'docker push $DOCKERHUB_USER/microservices:${GIT_COMMIT}'
-      }
+    stage('Build and Push Docker Image') {
+            steps {
+                script {
+                    // IMPORTANT: Change this to your Docker Hub username and image name!
+                    def imageName = "rajenderdandyal/microservices_bp:${env.BUILD_NUMBER}"
+                    
+                    echo "Building and pushing image: ${imageName}"
+
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+                        
+                        def customImage = docker.build(imageName)
+
+                        // Push with the build number tag
+                        customImage.push()
+
+                        // Push with the 'latest' tag
+                        customImage.push('latest')
+
+                        echo "Successfully pushed ${imageName} and ${imageName.split(':')[0]}:latest"
+                    }
+                }
+            }
     }
   }
   post {
