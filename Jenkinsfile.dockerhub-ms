@@ -116,7 +116,7 @@ pipeline {
       // For this stage, we need Maven. So we use the official Maven image.
       // Your controller now has the 'docker' command to start this agent.
       agent {
-        docker { image 'maven:3.8-jdk-21' }
+        docker { image 'maven:4.0.0-rc-4-amazoncorretto-21' }
       }
       steps {
         // Unstash (retrieve) the code from the 'Checkout' stage.
@@ -127,7 +127,7 @@ pipeline {
         }
       stage('Build') {
         agent {
-        docker { image 'maven:3.8-jdk-21' }
+        docker { image 'maven:4.0.0-rc-4-amazoncorretto-21' }
       }
         steps {
           sh 'mvn clean package -U -DskipTests'
