@@ -3,8 +3,8 @@ pipeline {
     label 'docker-agent'
   }
   environment {
-    DOCKERHUB_USER = credentials('dockerhub-user')
-    DOCKERHUB_PASSWORD = credentials('dockerhub-password')
+    // DOCKERHUB_USER = credentials('dockerhub-user')
+    // DOCKERHUB_PASSWORD = credentials('dockerhub-password')
   }
   stages {
     stage('Unit Test') {
@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     // IMPORTANT: Change this to your Docker Hub username and image name!
-                    def imageName = "rajenderdandyal/microservices_bp:${env.BUILD_NUMBER}"
+                    def imageName = "rajenderdandyal/microservices:${env.BUILD_NUMBER}"
                     
                     echo "Building and pushing image: ${imageName}"
 
