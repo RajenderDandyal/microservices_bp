@@ -113,7 +113,7 @@ pipeline {
         checkout scm
         echo 'Code checked out successfully.'
         // Stash the code (save it) so it can be used in the other agents.
-        stash name: 'source', includes: '**'
+        // stash name: 'source', includes: '**'
       }
         }
         stage('Run Maven Tests') {
@@ -124,7 +124,7 @@ pipeline {
       // }
       steps {
         // Unstash (retrieve) the code from the 'Checkout' stage.
-        unstash 'source'
+        // unstash 'source'
         echo 'Running Maven tests inside a Maven container...'
         sh 'mvn test'
       }
@@ -149,7 +149,7 @@ pipeline {
 
       steps {
         // Unstash the code again into this new agent's workspace.
-        unstash 'source'
+        // unstash 'source'
         script {
           def imageName = "rajenderdandyal/microservices:${env.BUILD_NUMBER}"
           echo "Building and pushing image: ${imageName}"
