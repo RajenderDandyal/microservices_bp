@@ -99,7 +99,7 @@ pipeline {
     // No global agent. We will define a specific agent for each stage.
     agent {
       docker {
-        image 'rajenderdandyal/jenkins-repo:jenkins-master-slave'
+        image 'rajenderdandyal/jenkins-repo:jenkins-java21-slave'
       }
     }
 
