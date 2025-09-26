@@ -97,13 +97,17 @@
 // Jenkinsfile
 pipeline {
     // No global agent. We will define a specific agent for each stage.
-    agent none
+    agent {
+      docker {
+        image 'rajenderdandyal/jenkins-repo:jenkins-master-slave'
+      }
+    }
 
     stages {
         stage('Checkout Code') {
       // This stage just needs a place to checkout code.
       // We'll use a basic agent that the Jenkins controller can start.
-      agent any
+      // agent any
       steps {
         cleanWs()
         checkout scm
@@ -115,9 +119,9 @@ pipeline {
         stage('Run Maven Tests') {
       // For this stage, we need Maven. So we use the official Maven image.
       // Your controller now has the 'docker' command to start this agent.
-      agent {
-        docker { image 'maven:4.0.0-rc-4-amazoncorretto-21' }
-      }
+      // agent {
+      //   docker { image 'maven:4.0.0-rc-4-amazoncorretto-21' }
+      // }
       steps {
         // Unstash (retrieve) the code from the 'Checkout' stage.
         unstash 'source'
@@ -126,9 +130,9 @@ pipeline {
       }
         }
       stage('Build') {
-        agent {
-        docker { image 'maven:4.0.0-rc-4-amazoncorretto-21' }
-      }
+        // agent {
+        // docker { image 'maven:4.0.0-rc-4-amazoncorretto-21' }
+        // }
         steps {
           sh 'mvn clean package -U -DskipTests'
         }
@@ -136,8 +140,14 @@ pipeline {
         stage('Build and Push Docker Image') {
       // For this stage, we need the 'docker' command.
       // We use the 'jenkins/docker' image, which is designed for this.
-      agent {
-        docker { image 'jenkins/docker' }
+      // agent {
+      //   docker {
+      //     image 'docker:latest'
+      //   }
+      // }
+      // Add the JDK tool that we configured in Jenkins
+      tools {
+        jdk 'jdk21'
       }
       steps {
         // Unstash the code again into this new agent's workspace.
