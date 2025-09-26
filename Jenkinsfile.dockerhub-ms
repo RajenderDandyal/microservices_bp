@@ -6,42 +6,42 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-      steps {
-        cleanWs()
-        checkout scm
-        echo 'Code checked out successfully.'
-      }
+      stage('Checkout Code') {
+        steps {
+          cleanWs()
+          checkout scm
+          echo 'Code checked out successfully.'
         }
-        stage('Run Maven Tests') {
-      steps {
-        echo 'Running Maven tests inside a Maven container...'
-        sh 'mvn test'
       }
+      stage('Run Maven Tests') {
+        steps {
+          echo 'Running Maven tests inside a Maven container...'
+          sh 'mvn test'
         }
+      }
       stage('Build') {
         steps {
           sh 'mvn clean package -U -DskipTests'
         }
       }
-        stage('Build and Push Docker Image') {
-      steps {
-        script {
-          def imageName = "rajenderdandyal/microservices:${env.BUILD_NUMBER}"
-          echo "Building and pushing image: ${imageName}"
+      stage('Build and Push Docker Image') {
+        steps {
+          script {
+            def imageName = "rajenderdandyal/microservices:${env.BUILD_NUMBER}"
+            echo "Building and pushing image: ${imageName}"
 
-          docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
-            echo 'Login successful. Building image...'
-            def customImage = docker.build(imageName)
+            docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials') {
+              echo 'Login successful. Building image...'
+              def customImage = docker.build(imageName)
 
-            echo 'Image built. Pushing to Docker Hub...'
-            customImage.push()
-            customImage.push('latest')
+              echo 'Image built. Pushing to Docker Hub...'
+              customImage.push()
+              customImage.push('latest')
 
-            echo "Successfully pushed ${imageName} and ${imageName.split(':')[0]}:latest"
+              echo "Successfully pushed ${imageName} and ${imageName.split(':')[0]}:latest"
+            }
           }
         }
       }
-        }
     }
 }
