@@ -146,9 +146,7 @@ pipeline {
       //   }
       // }
       // Add the JDK tool that we configured in Jenkins
-      tools {
-        jdk 'jdk21'
-      }
+
       steps {
         // Unstash the code again into this new agent's workspace.
         unstash 'source'
