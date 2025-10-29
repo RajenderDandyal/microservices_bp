@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoice-service-deployment
+  labels:
+    app: invoice-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: invoice-service
+  template:
+    metadata:
+      labels:
+        app: invoice-service
+    spec:
+      containers:
+      - name: invoice-service
+        image: rajenderdandyal/invoice-service:latest # <-- IMPORTANT: Change this to your image
+        ports:
+        - containerPort: 8002
+        # env:
+        # - name: SPRING_DATASOURCE_URL
+        #   value: "jdbc:postgresql://your-db-host:5432/invoicedb" # <-- Change this
+        # - name: SPRING_DATASOURCE_USERNAME
+        #   value: "user" # <-- Change this
+        # - name: SPRING_DATASOURCE_PASSWORD
+        #   value: "password" # <-- Change this
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8002
+          initialDelaySeconds: 45
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8002
+          initialDelaySeconds: 45
+          periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: invoice-service-svc
+spec:
+  selector:
+    app: invoice-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8002

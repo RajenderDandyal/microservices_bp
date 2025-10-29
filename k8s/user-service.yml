@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+  labels:
+    app: user-service
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+      - name: user-service
+        image: rajenderdandyal/user-service:latest # <-- IMPORTANT: Change this to your image
+        ports:
+        - containerPort: 8001
+        # env:
+        # - name: SPRING_DATASOURCE_URL
+        #   value: "jdbc:postgresql://your-db-host:5432/userdb" # <-- Change this
+        # - name: SPRING_DATASOURCE_USERNAME
+        #   value: "user" # <-- Change this
+        # - name: SPRING_DATASOURCE_PASSWORD
+        #   value: "password" # <-- Change this
+        livenessProbe:
+          httpGet:
+            path: /actuator/health/liveness
+            port: 8001
+          initialDelaySeconds: 45
+          periodSeconds: 15
+        readinessProbe:
+          httpGet:
+            path: /actuator/health/readiness
+            port: 8001
+          initialDelaySeconds: 45
+          periodSeconds: 15
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service-svc
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8001

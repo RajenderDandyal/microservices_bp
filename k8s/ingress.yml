@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress
+  annotations:
+    # Use 'nginx' if you are using the NGINX Ingress Controller
+    kubernetes.io/ingress.class: "nginx"
+    # This annotation rewrites the path before forwarding
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /api/invoices(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: invoice-service-svc
+            port:
+              number: 80
+      - path: /api/users(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service-svc
+            port:
+              number: 80
