@@ -3,23 +3,33 @@ kind: Ingress
 metadata:
   name: api-gateway-ingress
   annotations:
-    # Use 'nginx' if you are using the NGINX Ingress Controller
     kubernetes.io/ingress.class: "nginx"
-    # This annotation rewrites the path before forwarding
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+    # --- Custom JWT Validation Annotations ---
+    # Point to the internal service responsible for validating the JWT.
+    # The Ingress controller will make a sub-request to this URL.
+    # If it returns HTTP 200, the request is allowed.
+    # If it returns HTTP 401/403, the request is denied.
+    nginx.ingress.kubernetes.io/auth-url: "http://jwt-validator-svc.default.svc.cluster.local/validate"
+
+    # Optional: Pass claims from the validation service to your backend services.
+    # The validation service must return these as response headers.
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-User-ID, X-User-Roles"
+
 spec:
   rules:
   - http:
       paths:
       - path: /api/invoices(/|$)(.*)
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: invoice-service-svc
             port:
               number: 80
       - path: /api/users(/|$)(.*)
-        pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: user-service-svc

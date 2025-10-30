@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: jwt-secret
+type: Opaque
+data:
+  # The secret key, base64 encoded.
+  # Generate with: echo -n 'YOUR-SUPER-SECRET-KEY' | base64
+  key: U1VQRVItU0VDUkVULUtFWQ== # <-- IMPORTANT: Replace with your own base64 encoded secret
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jwt-validator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jwt-validator
+  template:
+    metadata:
+      labels:
+        app: jwt-validator
+    spec:
+      containers:
+      - name: jwt-validator
+        # IMPORTANT: Replace with your own image path after building and pushing
+        image: rajenderdandyal/jwt-validator:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: jwt-secret
+              key: key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jwt-validator-svc
+spec:
+  selector:
+    app: jwt-validator
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080

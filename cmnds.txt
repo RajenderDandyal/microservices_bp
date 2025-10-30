@@ -15,3 +15,62 @@ kubectl apply -f k8s/
 kubectl get pods -l app=user-service
 kubectl logs <your-user-service-pod-name>
 kubectl get ingress api-gateway-ingress
+
+
+
+🧩 Case 1: You deployed with a Kubernetes YAML file
+
+If you applied a YAML manifest (deployment.yaml, service.yaml, etc.):
+
+kubectl apply -f deployment.yaml
+
+
+Then to rerun (restart) your microservice:
+
+kubectl rollout restart deployment <deployment-name>
+
+
+✅ This will gracefully restart all pods under that deployment.
+
+To check the status:
+
+kubectl get pods
+kubectl rollout status deployment <deployment-name>
+
+
+If you want to redeploy from scratch:
+
+kubectl delete -f deployment.yaml
+kubectl apply -f deployment.yaml
+
+🧱 Case 2: You built a new image locally and want Minikube to use it
+
+If you changed the code and built a new Docker image:
+
+eval $(minikube docker-env)     # use Minikube’s Docker daemon
+docker build -t myservice:latest .
+kubectl rollout restart deployment <deployment-name>
+
+
+If your deployment YAML references the tag (myservice:latest), this will automatically pick up the updated image.
+
+🔁 Case 3: Redeploying all services
+
+If you just want to rerun everything in your Minikube cluster:
+
+kubectl delete pods --all
+
+
+All pods will restart (Deployments will recreate them automatically).
+
+Or:
+
+kubectl rollout restart deployment --all
+
+🧹 Case 4: Completely reset Minikube environment
+
+If you want to start fresh:
+
+minikube delete
+minikube start
+kubectl apply -f k8s/
