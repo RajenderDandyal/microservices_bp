@@ -1,7 +1,10 @@
+server:
+  port: 8001
+
 spring:
   datasource:
-    # url: jdbc:postgresql://localhost:5432/citizix_db
-    url: jdbc:postgresql://host.docker.internal:5432/citizix_db
+    url: jdbc:postgresql://localhost:5432/citizix_db
+    # url: jdbc:postgresql://host.docker.internal:5432/citizix_db
     username: citizix_user
     password: S3cret
     driver-class-name: org.postgresql.Driver
@@ -18,3 +21,7 @@ spring:
 invoice:
   service:
     url: http://localhost:8002
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration-ms: 86400000 # 24 hours

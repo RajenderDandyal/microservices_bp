@@ -35,3 +35,35 @@ spec:
             name: user-service-svc
             port:
               number: 80
+              
+---
+# --- PUBLIC INGRESS ---
+# This Ingress exposes public endpoints that do not require authentication.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-gateway-ingress-public
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - http:
+      paths:
+      # Example: An endpoint to generate a token should be public.
+      # This path will NOT trigger the JWT validation.
+      - path: /api/auth/token(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          # This should route to the service that generates tokens (e.g., user-service)
+          service:
+            name: user-service-svc
+            port:
+              number: 80
+      - path: /api/auth/signup(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: user-service-svc
+            port:
+              number: 80
