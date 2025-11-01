@@ -1,0 +1,6 @@
+# This file lists all the base resources that are common across all environments.
+resources:
+  - user-service.yaml
+  - invoice-service.yaml
+  - jwt-validator.yaml
+  - ingress.yaml

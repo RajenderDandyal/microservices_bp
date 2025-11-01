@@ -74,3 +74,16 @@ If you want to start fresh:
 minikube delete
 minikube start
 kubectl apply -f k8s/
+
+kubectl create namespace dev
+kubectl create namespace qa
+kubectl create namespace prod
+
+kubectl apply -k k8s/overlays/dev/
+
+
+
+
+
+
+mvn spring-boot:run -Dspring-boot.run.profiles=local

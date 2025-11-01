@@ -1,0 +1,20 @@
+# This overlay applies the 'dev' namespace to all resources from the base.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Point to the base directory
+resources:
+  - ../../base
+
+# Specify the namespace for this environment
+namespace: dev
+
+# You can also add environment-specific patches here.
+# For example, let's set the replica count for all deployments to 1 for dev.
+patches:
+- patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 1
+  target:
+    kind: Deployment
